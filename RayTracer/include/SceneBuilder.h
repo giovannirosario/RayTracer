@@ -3,20 +3,22 @@
 
 #include <iostream>
 #include "rapidjson/document.h"
-#include "Canvas.h"
+#include "Buffer.h"
 #include "Color.h"
 #include "Exporter.h"
-#include "Point2D.h"
-#include "Object.h"
+#include "Point3D.h"
+#include "Camera.h"
+#include "Background.h"
 #include <vector>
 #include <string>
 #include <map>
 
 class SceneBuilder {
     private:
-        Canvas canvas;
+        Buffer canvas;
+        Background background;
+        Camera camera;
         std::string scene;
-        std::vector<Object*> objects;
         std::map <std::string, std::string> pallete;
         
     public:
@@ -26,15 +28,10 @@ class SceneBuilder {
         void write_file(std::string f_name);
         void build_scene();
         void build_pallete(const rapidjson::Document& _pt);
-        void build_line(const rapidjson::Value& _pt);
-        void build_circle(const rapidjson::Value& _pt);
-        void build_polygon(const rapidjson::Value& _pt);
-        void build_polyline(const rapidjson::Value& _pt);
-        void build_circle_arc(const rapidjson::Value& _pt);
-        void draw_scene();
-        void flood_fill();
-        Color parse_color(const char * hex_string);
-        void raster(std::string f_in, std::string f_out);
+        void build_background(const rapidjson::Value& _pt);
+        void build_camera(const rapidjson::Value& _pt);
+        Color parse_color(const char * hex_string); 
+        void trace(std::string f_in, std::string f_out);
 };
 
 #endif

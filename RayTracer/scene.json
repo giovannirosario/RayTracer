@@ -1,0 +1,19 @@
+{
+    "pallete": {
+        "blue":"0000FF",
+        "cyan":"00FFFF",
+        "royalblue":"4169E1",
+        "violet":"EE82EE",
+        "red":"FF0000",
+        "gold":"FFD700"
+    },
+    "background":{
+        "type":"interpolation",
+        "colors":["red","blue","pink", "orange"]
+    },
+    "camera": {
+        "type":"orthographic",
+        "width":200,
+        "height":100
+    }
+}
