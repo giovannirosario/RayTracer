@@ -15,7 +15,7 @@
 
 class SceneBuilder {
     private:
-        Buffer canvas;
+        Buffer color_buffer;
         Background background;
         Camera camera;
         std::string scene;
@@ -31,7 +31,8 @@ class SceneBuilder {
         void build_background(const rapidjson::Value& _pt);
         void build_camera(const rapidjson::Value& _pt);
         Color parse_color(const char * hex_string); 
-        void trace(std::string f_in, std::string f_out);
+        void run(std::string f_in, std::string f_out);
+        void trace();
 };
 
 #endif

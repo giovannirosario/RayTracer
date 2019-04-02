@@ -9,8 +9,8 @@ class Exporter {
     public:
         Exporter();
         ~Exporter();
-        void export_png(Buffer canvas, std::string f_name);
-        void export_ppm(Buffer canvas, std::string f_name);
+        void export_png(Buffer color_buffer, std::string f_name);
+        void export_ppm(Buffer color_buffer, std::string f_name);
 };
 
 #endif

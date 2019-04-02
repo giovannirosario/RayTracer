@@ -9,11 +9,11 @@
     },
     "background":{
         "type":"interpolation",
-        "colors":["red","blue","pink", "orange"]
+        "colors":["red","blue","gold", "violet"]
     },
     "camera": {
         "type":"orthographic",
-        "width":200,
-        "height":100
+        "width":600,
+        "height":400
     }
 }

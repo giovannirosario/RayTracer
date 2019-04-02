@@ -24,7 +24,7 @@ void SceneBuilder::read_file(std::string f_name) {
 
 void SceneBuilder::write_file(std::string f_name) {
     Exporter exporter;
-    exporter.export_ppm(canvas, f_name);
+    exporter.export_ppm(color_buffer, f_name);
 }
 
 void SceneBuilder::build_scene() {
@@ -87,10 +87,18 @@ void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {
     }
 }
 
-void SceneBuilder::draw_scene() {
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        objects[i]->draw(canvas);
-    }
+void SceneBuilder::trace() {
+    color_buffer.set_size(camera.get_width(), camera.get_height());
+	int h = color_buffer.get_height();
+	int w = color_buffer.get_width();
+
+	for ( int j = h-1 ; j >= 0 ; j-- ) {
+		for( int i = 0 ; i < w ; i++ ) {
+			// Not shooting rays just yet; so let us sample the background.
+			Color color = background.get_pixel( float(i)/float(w), float(j)/float(h)); // get background color.
+			color_buffer.draw_pixel(i,j,color); // set image buffer at position (i,j), accordingly.
+        }
+	}
 }
 
 Color SceneBuilder::parse_color(const char * hex_string) {
@@ -108,36 +116,9 @@ Color SceneBuilder::parse_color(const char * hex_string) {
     return c;
 }
 
-void SceneBuilder::flood_fill(){
-    rapidjson::Document scene_json;
-    scene_json.Parse(scene.c_str());
-
-    Color color;
-    int x,y;
-
-    if (scene_json.HasMember("flood_fill")) {
-       for (auto& obj : scene_json["flood_fill"].GetArray()) {
-           if (obj.HasMember("color")) {
-                color = parse_color(obj["color"].GetString());
-            }
-
-            if (obj.HasMember("start")) {
-                const rapidjson::Value& values = obj["start"];
-                x = values[0].GetInt();
-                y = values[1].GetInt();
-            }
-            
-            FloodFill(canvas,x,y,color);
-       }
-    }
-
-}
-
-
-void SceneBuilder::raster(std::string f_in, std::string f_out) {
+void SceneBuilder::run(std::string f_in, std::string f_out) {
     read_file(f_in);
     build_scene();
-    draw_scene();
-    flood_fill();
+    trace();
     write_file(f_out);
 }

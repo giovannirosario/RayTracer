@@ -35,10 +35,6 @@ void Buffer::draw_pixel(int x, int y, Color color) {
     if(x >= 0 && y >= 0) { 
         if ((y * get_width() + x) < (get_width() * get_height())-1) {
             canvas[y * get_width() + x] = color;
-
-            if (anti_aliasing) {
-                draw_antiAliased_neighboors(x,y,color);
-            }
         }
     }
 }
