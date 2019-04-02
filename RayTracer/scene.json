@@ -2,16 +2,10 @@
     "pallete": {
         "blue":"0000FF",
         "cyan":"00FFFF",
-        "royalblue":"4169E1",
-        "violet":"EE82EE",
-        "red":"FF0000",
-        "gold":"FFD700",
-        "lilas":"C8A2C8",
-        "orange":"FF8C00"
     },
     "background":{
         "type":"interpolation",
-        "colors":["blue","lilas","red", "orange"]
+        "colors":["000033","00FF33","FFFF33", "FF0033"]
     },
     "camera": {
         "type":"orthographic",
