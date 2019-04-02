@@ -22,6 +22,13 @@ Color Background::get_pixel(float x, float y){
         int b = colors[0].get_b() * (1-x)*(1-y) + colors[1].get_b() * (1-x) * y + colors[2].get_b() * x * y + colors[3].get_b() * x * (1-y);
         return Color(r,g,b);
     }
+
+    if(type == "solid") {
+        int r = colors.front().get_r();
+        int g = colors.front().get_g();
+        int b = colors.front().get_b();
+        return Color(r,g,b);
+    }
 };
 
 
