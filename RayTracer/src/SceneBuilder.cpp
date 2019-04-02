@@ -94,9 +94,8 @@ void SceneBuilder::trace() {
 
 	for ( int j = h-1 ; j >= 0 ; j-- ) {
 		for( int i = 0 ; i < w ; i++ ) {
-			// Not shooting rays just yet; so let us sample the background.
-			Color color = background.get_pixel( float(i)/float(w), float(j)/float(h)); // get background color.
-			color_buffer.draw_pixel(i,j,color); // set image buffer at position (i,j), accordingly.
+			Color color = background.get_pixel( float(i)/float(w), float(j)/float(h)); 
+			color_buffer.draw_pixel(i,j,color); 
         }
 	}
 }

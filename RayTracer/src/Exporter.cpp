@@ -20,9 +20,10 @@ void Exporter::export_ppm(Buffer color_buffer, std::string f_name) {
 
 	for ( int j = h-1 ; j >= 0 ; j-- ) {
 		for( int i = 0 ; i < w ; i++ ) {
-            file << (int) pixels[j * color_buffer.get_width() + i].get_r() << " ";
-            file << (int) pixels[j * color_buffer.get_width() + i].get_g() << " ";
-            file << (int) pixels[j * color_buffer.get_width() + i].get_b() << " ";
+            Color c = color_buffer.get_pixel(i,j);
+            file << (int) c.get_r() << " ";
+            file << (int) c.get_g() << " ";
+            file << (int) c.get_b() << " ";
         }
         file << std::endl;
     }

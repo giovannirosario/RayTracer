@@ -20,6 +20,7 @@ class Buffer {
         Color * get_canvas();
         void draw_background(Color bg_color);
         void draw_pixel(int x, int y, Color color);
+        Color get_pixel(int x, int y);
 };
 
 #endif
