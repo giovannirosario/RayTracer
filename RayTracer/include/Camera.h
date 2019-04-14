@@ -13,7 +13,8 @@ class Camera {
         vec3 up;
 
     public:
-        Camera();
+        Camera(){};
+        virtual ~Camera(){};
         void set_size(int width, int height);
         void set_position(vec3 position);
         void set_target(vec3 target);
@@ -21,10 +22,7 @@ class Camera {
         int get_width();
         int get_height();
 
-        virtual Ray generate_ray(int x, int y) = 0;
         virtual Ray generate_ray(float x, float y) = 0;
-        
-
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define _PERSPECTIVECAMERA_H_
 
 #include "Camera.h"
+#include "Ray.h"
 
 class PerspectiveCamera : public Camera {
     private:
@@ -11,7 +12,8 @@ class PerspectiveCamera : public Camera {
 
     public:
         PerspectiveCamera();
-        Ray generate_ray(int x, int y);
+        ~PerspectiveCamera();
+
         Ray generate_ray(float x, float y);
 };
 

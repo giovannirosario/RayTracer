@@ -1,6 +1,12 @@
 #include "OrthoCamera.h"
 #include "vec3.h"
 
+#include <iostream>
+
+OrthoCamera::OrthoCamera() {}
+
+OrthoCamera::~OrthoCamera() {}
+
 Ray OrthoCamera::generate_ray(float x, float y) {
     float u = l + (r - l) * (x + 0.5)/width;
     float v = b + (t - b) * (y + 0.5)/height;
@@ -16,5 +22,5 @@ Ray OrthoCamera::generate_ray(float x, float y) {
     vec3 ray_origin = position;
     ray_origin += vec_u * u + vec_v*v;
 
-    Ray()
+    std::cout << "ahusd";
 }

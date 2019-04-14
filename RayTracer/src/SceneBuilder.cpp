@@ -68,9 +68,10 @@ void SceneBuilder::build_background(const rapidjson::Value& _pt) {
 
 void SceneBuilder::build_camera(const rapidjson::Value& _pt) {    
     if (_pt.HasMember("type")) {
-        if(_pt["type"].GetString() == "orthographic") {
+        std::string type = _pt["type"].GetString();
+        if(type == "orthographic") {
             camera = new OrthoCamera();
-        } else if (_pt["type"].GetString() == "perspective") {
+        } else if (type == "perspective") {
             camera = new PerspectiveCamera();
         }
     }
@@ -94,7 +95,7 @@ void SceneBuilder::build_camera(const rapidjson::Value& _pt) {
             camera->set_up(vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt()));
     }
 
-
+    camera->generate_ray(10,30);
 }
 
 void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {

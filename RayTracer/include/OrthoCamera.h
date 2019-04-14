@@ -13,7 +13,8 @@ class OrthoCamera : public Camera {
 
     public:
         OrthoCamera();
-        Ray generate_ray(int x, int y);
+        ~OrthoCamera();
+
         Ray generate_ray(float x, float y);
 };
 
