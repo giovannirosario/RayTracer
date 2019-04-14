@@ -5,11 +5,6 @@
 
 class OrthoCamera : public Camera {
     private:
-        /*View plane dimensions */ 
-        float l; //left
-        float r; //right
-        float b; //bottom
-        float t; //top
 
     public:
         OrthoCamera();

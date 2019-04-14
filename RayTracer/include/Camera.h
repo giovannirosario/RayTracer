@@ -12,6 +12,12 @@ class Camera {
         vec3 target;
         vec3 up;
 
+        /*View plane dimensions */ 
+        float l; //left
+        float r; //right
+        float b; //bottom
+        float t; //top
+
     public:
         Camera(){};
         virtual ~Camera(){};

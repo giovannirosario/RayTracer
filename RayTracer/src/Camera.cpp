@@ -1,7 +1,6 @@
 #include "Camera.h"
 
-Ray Camera::generate_ray(float x, float y) {
-}
+Ray Camera::generate_ray(float x, float y) {}
 
 void Camera::set_size(int width, int height){
     this->width = width;

@@ -22,5 +22,5 @@ Ray OrthoCamera::generate_ray(float x, float y) {
     vec3 ray_origin = position;
     ray_origin += vec_u * u + vec_v*v;
 
-    std::cout << "ahusd";
+    return Ray(ray_origin, ray_direction);
 }

@@ -11,6 +11,8 @@ class Ray {
     public:
         Ray();
         Ray (const vec3& o, const vec3& d ) : origin{origin}, v_direction{v_direction} {}
+        vec3 get_origin();
+        vec3 get_vDirecetion();
 };
 
 

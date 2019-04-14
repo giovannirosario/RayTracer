@@ -9,6 +9,7 @@
 #include "Buffer.h"
 #include "OrthoCamera.h"
 #include "PerspectiveCamera.h"
+#include "vec3.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -94,8 +95,6 @@ void SceneBuilder::build_camera(const rapidjson::Value& _pt) {
         const rapidjson::Value& a = _pt["up"];
             camera->set_up(vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt()));
     }
-
-    camera->generate_ray(10,30);
 }
 
 void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {
@@ -111,8 +110,10 @@ void SceneBuilder::trace() {
 
 	for ( int j = h-1 ; j >= 0 ; j-- ) {
 		for( int i = 0 ; i < w ; i++ ) {
-			Color color = background.get_pixel( float(i)/float(w), float(j)/float(h)); 
-			color_buffer.draw_pixel(i,j,color); 
+			Ray r1 = camera->generate_ray(float(i)/float(w), float(j)/float(h)); 
+            Ray r2 = camera->generate_ray(i,j);
+
+            std::cout << r2.get_origin() << "_____" << r2.get_vDirecetion() << std::endl;
         }
 	}
 }
@@ -136,5 +137,5 @@ void SceneBuilder::run(std::string f_in, std::string f_out) {
     read_file(f_in);
     build_scene();
     trace();
-    write_file(f_out);
+    //write_file(f_out);
 }
