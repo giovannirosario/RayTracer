@@ -7,10 +7,6 @@ void Camera::set_size(int width, int height){
     this->height = height;
 }
 
-void Camera::set_type(std::string type){
-    this->type = type;
-}
-
 int Camera::get_width() {
     return this->width;
 }

@@ -7,6 +7,8 @@
 #include "Color.h"
 #include "Exporter.h"
 #include "Buffer.h"
+#include "OrthoCamera.h"
+#include "PerspectiveCamera.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -65,20 +67,34 @@ void SceneBuilder::build_background(const rapidjson::Value& _pt) {
 
 
 void SceneBuilder::build_camera(const rapidjson::Value& _pt) {    
-    int width, height;
     if (_pt.HasMember("type")) {
-        std::string type;
-        type = _pt["type"].GetString();
-        camera.set_type(type);
-    }
-    if (_pt.HasMember("width")) {
-        width = _pt["width"].GetInt();
-    }
-    if (_pt.HasMember("height")) {
-        height = _pt["height"].GetInt();
+        if(_pt["type"].GetString() == "orthographic") {
+            camera = new OrthoCamera();
+        } else if (_pt["type"].GetString() == "perspective") {
+            camera = new PerspectiveCamera();
+        }
     }
 
-    camera.set_size(width, height);    
+    if (_pt.HasMember("width") && _pt.HasMember("height")) {
+        camera->set_size(_pt["width"].GetInt(),_pt["height"].GetInt());   
+    }
+
+    if (_pt.HasMember("position")) {
+        const rapidjson::Value& a = _pt["position"];
+            camera->set_position(vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt()));
+    }
+
+    if (_pt.HasMember("target")) {
+        const rapidjson::Value& a = _pt["target"];
+            camera->set_target(vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt()));
+    }
+
+    if (_pt.HasMember("up")) {
+        const rapidjson::Value& a = _pt["up"];
+            camera->set_up(vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt()));
+    }
+
+
 }
 
 void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {
@@ -88,7 +104,7 @@ void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {
 }
 
 void SceneBuilder::trace() {
-    color_buffer.set_size(camera.get_width(), camera.get_height());
+    color_buffer.set_size(camera->get_width(), camera->get_height());
 	int h = color_buffer.get_height();
 	int w = color_buffer.get_width();
 

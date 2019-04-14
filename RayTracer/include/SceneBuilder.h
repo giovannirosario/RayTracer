@@ -6,7 +6,7 @@
 #include "Buffer.h"
 #include "Color.h"
 #include "Exporter.h"
-#include "Point3D.h"
+#include "vec3.h"
 #include "Camera.h"
 #include "Background.h"
 #include <vector>
@@ -17,7 +17,7 @@ class SceneBuilder {
     private:
         Buffer color_buffer;
         Background background;
-        Camera camera;
+        Camera * camera;
         std::string scene;
         std::map <std::string, std::string> pallete;
         
