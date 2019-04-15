@@ -5,14 +5,14 @@
 
 class Ray {
     private:
-        const vec3 origin; //!< origin
-        const vec3 v_direction; //!< direction
+        vec3 origin; //!< origin
+        vec3 v_direction; //!< direction
         
     public:
         Ray();
-        Ray (const vec3& o, const vec3& d ) : origin{origin}, v_direction{v_direction} {}
+        Ray (vec3 o, vec3 d);
         vec3 get_origin();
-        vec3 get_vDirecetion();
+        vec3 get_vDirection();
 };
 
 
