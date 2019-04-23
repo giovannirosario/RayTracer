@@ -110,7 +110,6 @@ void SceneBuilder::trace() {
 
 	for ( int j = h-1 ; j >= 0 ; j-- ) {
 		for( int i = 0 ; i < w ; i++ ) {
-			Ray r1 = camera->generate_ray(float(i)/float(w), float(j)/float(h)); 
             Ray r2 = camera->generate_ray(i,j);
 
             //std::cout << r2.get_origin() << "_____" << r2.get_vDirection() << std::endl;

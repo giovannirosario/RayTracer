@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include "Primitive.h"
 
 class SceneBuilder {
     private:
@@ -20,6 +21,7 @@ class SceneBuilder {
         Camera * camera;
         std::string scene;
         std::map <std::string, std::string> pallete;
+        std::vector<Primitive*> primitives;
         
     public:
         SceneBuilder();
