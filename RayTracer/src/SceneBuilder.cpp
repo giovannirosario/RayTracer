@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Sphere.h"
 
 SceneBuilder::SceneBuilder() {}
 
@@ -46,6 +47,10 @@ void SceneBuilder::build_scene() {
 
     if (scene_json.HasMember("camera")) {
         build_camera(scene_json["camera"]);
+    }
+
+    if (scene_json.HasMember("objects")) {
+        build_objects(scene_json);
     }
 }
 
@@ -95,7 +100,52 @@ void SceneBuilder::build_camera(const rapidjson::Value& _pt) {
         const rapidjson::Value& a = _pt["up"];
             camera->set_up(vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt()));
     }
+
+    if (_pt.HasMember("vpdim")) {
+       const rapidjson::Value& a = _pt["vpdim"];
+            camera->set_vpdim(a[0].GetFloat(),a[1].GetFloat(),a[2].GetFloat(),a[3].GetFloat()); 
+    }
 }
+
+void SceneBuilder::build_objects(const rapidjson::Document& _pt) {
+    for (auto& obj : _pt["objects"].GetArray()) {
+        if(obj.HasMember("type")) {
+            std::string type = obj["type"].GetString();
+        
+            if (type == "sphere") {
+                build_sphere(obj);
+            }
+        }
+    }
+}
+
+void SceneBuilder::build_sphere(const rapidjson::Value& obj) {
+        std::string name;
+        std::string type;
+        float radius;
+        vec3 center;
+
+        if(obj.HasMember("name")) {
+            name = obj["name"].GetString();
+        }
+
+        if(obj.HasMember("type")) {
+            type = obj["type"].GetString();
+        }
+
+        if(obj.HasMember("radius")) {
+           radius = obj["radius"].GetFloat();
+        }
+
+        if (obj.HasMember("center")) {
+            const rapidjson::Value& a = obj["center"];
+            center = vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt());
+        }
+
+        Sphere* a = new Sphere(name, type, radius, center);
+        primitives.push_back(a);
+}
+
 
 void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {
     for (auto& m : _pt["pallete"].GetObject()) {
@@ -110,9 +160,16 @@ void SceneBuilder::trace() {
 
 	for ( int j = h-1 ; j >= 0 ; j-- ) {
 		for( int i = 0 ; i < w ; i++ ) {
-            Ray r2 = camera->generate_ray(i,j);
+            Ray ray = camera->generate_ray(i,j);
+            Color color = background.get_pixel( float(i)/float(w), float(j)/float(h));
+            
+            for(Primitive* p : primitives) {
+                if(p->intersect_p(ray)){
+                    color.set(255,0,0);
+                }
+            }
 
-            //std::cout << r2.get_origin() << "_____" << r2.get_vDirection() << std::endl;
+            color_buffer.draw_pixel(i,j,color);
         }
 	}
 }

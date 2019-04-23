@@ -27,3 +27,10 @@ void Camera::set_up(vec3 up){
     this->up = up;
 }
 
+void Camera::set_vpdim(float l, float r, float b, float t) {
+    this->l = l;
+    this->r = r;
+    this->b = b;
+    this->t = t;
+}
+

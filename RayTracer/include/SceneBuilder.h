@@ -32,6 +32,8 @@ class SceneBuilder {
         void build_pallete(const rapidjson::Document& _pt);
         void build_background(const rapidjson::Value& _pt);
         void build_camera(const rapidjson::Value& _pt);
+        void build_objects(const rapidjson::Document& _pt);
+        void build_sphere(const rapidjson::Value& obj);
         Color parse_color(const char * hex_string); 
         void run(std::string f_in, std::string f_out);
         void trace();

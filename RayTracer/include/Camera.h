@@ -25,6 +25,7 @@ class Camera {
         void set_position(vec3 position);
         void set_target(vec3 target);
         void set_up(vec3 up);
+        void set_vpdim(float l, float r, float b, float t);
         int get_width();
         int get_height();
 
