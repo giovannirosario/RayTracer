@@ -8,11 +8,36 @@
         "colors":["000033","00FF33","FFFF33", "FF0033"]
     },
     "camera": {
-        "type":"orthographic",
+        "type":"perspective",
         "position":[0,5,0],
         "target":[0,0,-10],
         "up":[0,1,1],
+        
+        "fovy":65.0,
+        "aspect":1.33,
+        "fdistance":1,
+
         "width":600,
         "height":400
-    }
+    },
+    "objects":[
+        {
+            "name":"sphere1",
+            "type":"sphere",
+            "radius":0.5,
+            "center":[10,5,2]
+        },
+        {
+            "name":"sphere2",
+            "type":"sphere",
+            "radius":0.2,
+            "center":[1,-5,3]
+        },
+        {
+            "name":"sphere3",
+            "type":"sphere",
+            "radius":0.9,
+            "center":[2,4,8]
+        }
+    ]
 }
