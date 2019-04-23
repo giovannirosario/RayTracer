@@ -1,7 +1,7 @@
 {
     "pallete": {
         "blue":"0000FF",
-        "cyan":"00FFFF",
+        "cyan":"00FFFF"
     },
     "background":{
         "type":"interpolation",
