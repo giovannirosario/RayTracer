@@ -139,7 +139,7 @@ void SceneBuilder::build_sphere(const rapidjson::Value& obj) {
 
         if (obj.HasMember("center")) {
             const rapidjson::Value& a = obj["center"];
-            center = vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt());
+            center = vec3(a[0].GetFloat(),a[1].GetFloat(),a[2].GetFloat());
         }
 
         Sphere* a = new Sphere(name, type, radius, center);
