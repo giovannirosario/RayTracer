@@ -163,9 +163,10 @@ void SceneBuilder::trace() {
             Ray ray = camera->generate_ray(i,j);
             Color color = background.get_pixel( float(i)/float(w), float(j)/float(h));
             
+            std::cout << ray.get_vDirection() << std::endl;
             for(Primitive* p : primitives) {
                 if(p->intersect_p(ray)){
-                    color.set(255,0,0);
+                    color = Color(255,0,0);
                 }
             }
 
@@ -193,5 +194,5 @@ void SceneBuilder::run(std::string f_in, std::string f_out) {
     read_file(f_in);
     build_scene();
     trace();
-    //write_file(f_out);
+    write_file(f_out);
 }

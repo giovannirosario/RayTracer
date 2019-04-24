@@ -13,8 +13,8 @@ class Sphere : public Primitive {
         Sphere();
         Sphere(std::string name, std::string type, float radius, vec3 center);
         ~Sphere();
-        bool intersect(const Ray& r, SurfaceInteraction * si);
-        bool intersect_p( const Ray& r );
+        bool intersect(Ray& r, SurfaceInteraction * si);
+        bool intersect_p(Ray& r );
 };
 
 #endif

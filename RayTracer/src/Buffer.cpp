@@ -34,7 +34,7 @@ Color * Buffer::get_canvas() {
 void Buffer::draw_pixel(int x, int y, Color color) {
     if(x >= 0 && y >= 0) { 
         if ((y * get_width() + x) < (get_width() * get_height())-1) {
-            canvas[(height - y) * width + x] = color;
+            canvas[y * get_width() + x] = color;
         }
     }
 }
@@ -42,7 +42,7 @@ void Buffer::draw_pixel(int x, int y, Color color) {
 Color Buffer::get_pixel(int x, int y) {
     if(x >= 0 && y >= 0) { 
         if ((y * height + x) < (width * height)-1) {
-            return canvas[(height - y) * width + x];
+            return canvas[y * get_width() + x];
         }
     }
 }

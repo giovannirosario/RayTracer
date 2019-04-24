@@ -4,6 +4,6 @@
 
 Primitive::Primitive() {}
 
-bool Primitive::intersect( const Ray& r, SurfaceInteraction * si)  {}
+bool Primitive::intersect(Ray& r, SurfaceInteraction * si)  {}
 
-bool Primitive::intersect_p( const Ray& r ) {}
+bool Primitive::intersect_p(Ray& r ) {}

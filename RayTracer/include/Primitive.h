@@ -11,8 +11,8 @@ class Primitive {
     public:
         Primitive();
         virtual ~Primitive() {};
-        virtual bool intersect(const Ray& r, SurfaceInteraction * si) = 0;
-        virtual bool intersect_p( const Ray& r ) = 0;
+        virtual bool intersect(Ray& r, SurfaceInteraction * si) = 0;
+        virtual bool intersect_p(Ray& r ) = 0;
         //virtual const Material * get_material(void) const sig_t= { return material; }
 }; 
 
