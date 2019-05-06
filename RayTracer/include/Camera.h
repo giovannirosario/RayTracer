@@ -2,20 +2,38 @@
 #define _CAMERA_H_
 
 #include <string>
+#include "Ray.h"
+#include "CameraParams.h"
 
 class Camera {
-    private:
-        std::string type;
+    protected:
         int width;
         int height;
+        vec3 position;
+        vec3 target;
+        vec3 up;
+
+        float fovy;
+        float aspect;
+        float fdistance;
+
+        /*View plane dimensions */ 
+        float l; //left
+        float r; //right
+        float b; //bottom
+        float t; //top
+
     public:
-        Camera();
-        void set_size(int width, int height);
-        void set_type(std::string type);
+        Buffer film;
+
+        Camera(){};
+        virtual ~Camera(){};
+        void set_params(CameraParams params);
         int get_width();
         int get_height();
-        
 
+
+        virtual Ray generate_ray(float x, float y) = 0;
 };
 
 #endif

@@ -1,0 +1,5 @@
+TODO 
+P04
+
+- Metodo de intersect com o surface_intersection
+- vincular parser com classe PrimitiveParams

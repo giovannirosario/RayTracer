@@ -6,20 +6,26 @@
 #include "Buffer.h"
 #include "Color.h"
 #include "Exporter.h"
-#include "Point3D.h"
+#include "vec3.h"
 #include "Camera.h"
 #include "Background.h"
 #include <vector>
 #include <string>
 #include <map>
+#include "Primitive.h"
+#include "Scene.h"
+#include "Integrator.h"
 
 class SceneBuilder {
     private:
-        Buffer color_buffer;
-        Background background;
-        Camera camera;
-        std::string scene;
+        Scene* scene;
+        Camera* camera;
+        Integrator* integrator;
+
+        std::string scene_string;
         std::map <std::string, std::string> pallete;
+
+        std::vector<Primitive*> primitives;
         
     public:
         SceneBuilder();
@@ -30,6 +36,8 @@ class SceneBuilder {
         void build_pallete(const rapidjson::Document& _pt);
         void build_background(const rapidjson::Value& _pt);
         void build_camera(const rapidjson::Value& _pt);
+        void build_objects(const rapidjson::Document& _pt);
+        void build_sphere(const rapidjson::Value& obj);
         Color parse_color(const char * hex_string); 
         void run(std::string f_in, std::string f_out);
         void trace();

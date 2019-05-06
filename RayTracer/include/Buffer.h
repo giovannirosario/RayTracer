@@ -1,7 +1,7 @@
 #ifndef _BUFFER_H_
 #define _BUFFER_H_
 
-#include "Color.h"
+#include "Color.h" 
 
 class Buffer {
     private:

@@ -1,15 +1,45 @@
 {
     "pallete": {
         "blue":"0000FF",
-        "cyan":"00FFFF",
+        "cyan":"00FFFF"
     },
     "background":{
         "type":"interpolation",
-        "colors":["000033","00FF33","FFFF33", "FF0033"]
+        "colors":["99CCFF","120A8F","120A8F", "99CCFF"]
     },
     "camera": {
         "type":"orthographic",
+        "position":[0,0,0],
+        "target":[0,0,-10],
+        "up":[0,1,1],
+        
+        "vpdim":[-3,3,-2.25,2.25],
+
+        "fovy":65.0,
+        "aspect":1.33,
+        "fdistance":1,
+
         "width":600,
         "height":400
-    }
+    },
+    "objects":[
+        {
+            "name":"sphere1",
+            "type":"sphere",
+            "radius":0.4,
+            "center":[-1,0.5,-5]
+        },
+        {
+            "name":"sphere2",
+            "type":"sphere",
+            "radius":0.4,
+            "center":[1,-0.5,-8]
+        },
+        {
+            "name":"sphere3",
+            "type":"sphere",
+            "radius":0.4,
+            "center":[-1,-1.5,-3.5]
+        }
+    ]
 }

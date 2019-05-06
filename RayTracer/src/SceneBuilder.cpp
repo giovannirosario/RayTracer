@@ -7,9 +7,14 @@
 #include "Color.h"
 #include "Exporter.h"
 #include "Buffer.h"
+#include "OrthoCamera.h"
+#include "PerspectiveCamera.h"
+#include "vec3.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Sphere.h"
+#include "CameraParams.h"
 
 SceneBuilder::SceneBuilder() {}
 
@@ -19,17 +24,17 @@ void SceneBuilder::read_file(std::string f_name) {
     std::ifstream t(f_name);
     std::stringstream buffer;
     buffer << t.rdbuf();
-    scene = buffer.str();
+    scene_string = buffer.str();
 }
 
 void SceneBuilder::write_file(std::string f_name) {
     Exporter exporter;
-    exporter.export_ppm(color_buffer, f_name);
+    exporter.export_ppm(camera->film, f_name);
 }
 
 void SceneBuilder::build_scene() {
     rapidjson::Document scene_json;
-    scene_json.Parse(scene.c_str());
+    scene_json.Parse(scene_string.c_str());
 
     int width, height;
 
@@ -44,6 +49,10 @@ void SceneBuilder::build_scene() {
     if (scene_json.HasMember("camera")) {
         build_camera(scene_json["camera"]);
     }
+
+    if (scene_json.HasMember("objects")) {
+        build_objects(scene_json);
+    }
 }
 
 
@@ -51,35 +60,116 @@ void SceneBuilder::build_background(const rapidjson::Value& _pt) {
     if (_pt.HasMember("type")) {
         std::string type;
         type = _pt["type"].GetString();
-        background.set_type(type);
+        scene->background->set_type(type);
     }
     
     if (_pt.HasMember("colors")) {
         const rapidjson::Value& colors = _pt["colors"];
         for (rapidjson::SizeType i = 0; i < colors.Size(); i++) {
             Color color = parse_color(colors[i].GetString());
-            background.add_color(color);
+            scene->background->add_color(color);
         }
     }
 }
 
 
-void SceneBuilder::build_camera(const rapidjson::Value& _pt) {    
-    int width, height;
+void SceneBuilder::build_camera(const rapidjson::Value& _pt) {
+    CameraParams cameraParams;
+
     if (_pt.HasMember("type")) {
-        std::string type;
-        type = _pt["type"].GetString();
-        camera.set_type(type);
-    }
-    if (_pt.HasMember("width")) {
-        width = _pt["width"].GetInt();
-    }
-    if (_pt.HasMember("height")) {
-        height = _pt["height"].GetInt();
+        std::string type = _pt["type"].GetString();
+        if(type == "orthographic") {
+            camera = new OrthoCamera();
+        } else if (type == "perspective") {
+            camera = new PerspectiveCamera();
+        }
     }
 
-    camera.set_size(width, height);    
+    if (_pt.HasMember("width")) {
+        cameraParams.width = _pt["width"].GetInt();
+    }
+
+    if (_pt.HasMember("width")) {
+        cameraParams.height = _pt["height"].GetInt();
+    }
+
+    if (_pt.HasMember("position")) {
+        const rapidjson::Value& a = _pt["position"];
+        cameraParams.position = vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt());
+    }
+
+    if (_pt.HasMember("target")) {
+        const rapidjson::Value& a = _pt["target"];
+        cameraParams.target = vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt());
+    }
+
+    if (_pt.HasMember("up")) {
+        const rapidjson::Value& a = _pt["up"];
+        cameraParams.up = vec3(a[0].GetInt(),a[1].GetInt(),a[2].GetInt());
+    }
+
+    if (_pt.HasMember("vpdim")) {
+       const rapidjson::Value& a = _pt["vpdim"];
+        cameraParams.vpdim[0] = a[0].GetFloat();
+        cameraParams.vpdim[1] = a[1].GetFloat();
+        cameraParams.vpdim[2] = a[2].GetFloat();
+        cameraParams.vpdim[3] = a[3].GetFloat();
+    }
+
+    if (_pt.HasMember("fovy")) {
+        cameraParams.fovy = _pt["fovy"].GetFloat();
+    }
+
+    if (_pt.HasMember("aspect")) {
+        cameraParams.aspect = _pt["aspect"].GetFloat();
+    }
+
+    if (_pt.HasMember("fdistance")) {
+        cameraParams.fdistance = _pt["fdistance"].GetFloat();
+    }
+
+    camera->set_params(cameraParams);
 }
+
+void SceneBuilder::build_objects(const rapidjson::Document& _pt) {
+    for (auto& obj : _pt["objects"].GetArray()) {
+        if(obj.HasMember("type")) {
+            std::string type = obj["type"].GetString();
+        
+            if (type == "sphere") {
+                build_sphere(obj);
+            }
+        }
+    }
+}
+
+void SceneBuilder::build_sphere(const rapidjson::Value& obj) {
+        std::string name;
+        std::string type;
+        float radius;
+        vec3 center;
+
+        if(obj.HasMember("name")) {
+            name = obj["name"].GetString();
+        }
+
+        if(obj.HasMember("type")) {
+            type = obj["type"].GetString();
+        }
+
+        if(obj.HasMember("radius")) {
+           radius = obj["radius"].GetFloat();
+        }
+
+        if (obj.HasMember("center")) {
+            const rapidjson::Value& a = obj["center"];
+            center = vec3(a[0].GetFloat(),a[1].GetFloat(),a[2].GetFloat());
+        }
+
+        Sphere* a = new Sphere(name, type, radius, center);
+        primitives.push_back(a);
+}
+
 
 void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {
     for (auto& m : _pt["pallete"].GetObject()) {
@@ -88,16 +178,28 @@ void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {
 }
 
 void SceneBuilder::trace() {
-    color_buffer.set_size(camera.get_width(), camera.get_height());
+
+    integrator->render(scene);
+    
+    /*color_buffer.set_size(camera->get_width(), camera->get_height());
 	int h = color_buffer.get_height();
 	int w = color_buffer.get_width();
 
 	for ( int j = h-1 ; j >= 0 ; j-- ) {
 		for( int i = 0 ; i < w ; i++ ) {
-			Color color = background.get_pixel( float(i)/float(w), float(j)/float(h)); 
-			color_buffer.draw_pixel(i,j,color); 
+            Ray ray = camera->generate_ray(i,j);
+            Color color = background.get_pixel( float(i)/float(w), float(j)/float(h));
+            
+            std::cout << ray.get_vDirection() << std::endl;
+            for(Primitive* p : primitives) {
+                if(p->intersect_p(ray)){
+                    color = Color(255,0,0);
+                }
+            }
+
+            color_buffer.draw_pixel(i,j,color);
         }
-	}
+	}*/
 }
 
 Color SceneBuilder::parse_color(const char * hex_string) {
