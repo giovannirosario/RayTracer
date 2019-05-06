@@ -16,8 +16,8 @@ class CameraParams {
         float fovy;
         float aspect;
         float fdistance;
-        int width;
-        int height;
+        int width = 800;
+        int height = 600;
 
         CameraParams();
         ~CameraParams();

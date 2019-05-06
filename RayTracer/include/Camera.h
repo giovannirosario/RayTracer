@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Ray.h"
+#include "CameraParams.h"
 
 class Camera {
     protected:
@@ -12,6 +13,10 @@ class Camera {
         vec3 target;
         vec3 up;
 
+        float fovy;
+        float aspect;
+        float fdistance;
+
         /*View plane dimensions */ 
         float l; //left
         float r; //right
@@ -19,15 +24,14 @@ class Camera {
         float t; //top
 
     public:
+        Buffer film;
+
         Camera(){};
         virtual ~Camera(){};
-        void set_size(int width, int height);
-        void set_position(vec3 position);
-        void set_target(vec3 target);
-        void set_up(vec3 up);
-        void set_vpdim(float l, float r, float b, float t);
+        void set_params(CameraParams params);
         int get_width();
         int get_height();
+
 
         virtual Ray generate_ray(float x, float y) = 0;
 };

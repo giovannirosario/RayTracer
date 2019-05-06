@@ -13,14 +13,18 @@
 #include <string>
 #include <map>
 #include "Primitive.h"
+#include "Scene.h"
+#include "Integrator.h"
 
 class SceneBuilder {
     private:
-        Buffer color_buffer;
-        Background background;
-        Camera * camera;
-        std::string scene;
+        Scene* scene;
+        Camera* camera;
+        Integrator* integrator;
+
+        std::string scene_string;
         std::map <std::string, std::string> pallete;
+
         std::vector<Primitive*> primitives;
         
     public:

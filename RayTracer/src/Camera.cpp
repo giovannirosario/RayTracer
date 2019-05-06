@@ -2,11 +2,6 @@
 
 Ray Camera::generate_ray(float x, float y) {}
 
-void Camera::set_size(int width, int height){
-    this->width = width;
-    this->height = height;
-}
-
 int Camera::get_width() {
     return this->width;
 }
@@ -15,22 +10,20 @@ int Camera::get_height() {
     return this->height;
 }
 
-void Camera::set_position(vec3 position){
-    this->position = position;
-}
+void Camera::set_params(CameraParams params) {
+    this->width = params.width;
+    this->height = params.height;
 
-void Camera::set_target(vec3 target){
-    this->target = target;
-}
+    this->position = params.position;
+    this->target = params.target;
+    this->up = params.up;
 
-void Camera::set_up(vec3 up){
-    this->up = up;
-}
+    this->fovy = params.fovy;
+    this->fdistance = params.fdistance;
+    this->aspect = params.aspect;
 
-void Camera::set_vpdim(float l, float r, float b, float t) {
-    this->l = l;
-    this->r = r;
-    this->b = b;
-    this->t = t;
+    this->l = params.vpdim[0];
+    this->r = params.vpdim[1];
+    this->b = params.vpdim[2];
+    this->t = params.vpdim[3];
 }
-
