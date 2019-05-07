@@ -3,11 +3,11 @@
 
 Sphere::Sphere() {}
 
-Sphere::Sphere(std::string name, std::string type, float radius, vec3 center){
-    this->name = name;
-    this->type = type;
-    this->radius = radius;
-    this->center = center;
+Sphere::Sphere(PrimitiveParams params){
+    this->name = params.name;
+    this->type = params.type;
+    this->radius = params.radius;
+    this->center = params.center;
 }
 
 Sphere::~Sphere(){}

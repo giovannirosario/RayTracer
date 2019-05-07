@@ -17,9 +17,7 @@ class Scene {
         Scene(std::vector<Primitive*> aggregate){}
         /// Determines the intersection info; return true if there is an intersection.
         bool intersect(Ray& r, SurfaceInteraction *isect ) const;
-        /*! A faster version that only determines whether there is an intersection or not;
-         * it doesn't calculate the intersection info.
-         */
+        /*! A faster version that only determines whether there is an intersection or not;*/
         bool intersect_p(Ray& r ) const;
 };
 

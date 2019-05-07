@@ -25,7 +25,7 @@ void SceneBuilder::read_file(std::string f_name) {
     std::stringstream buffer;
     buffer << t.rdbuf();
     scene_string = buffer.str();
-}
+}   
 
 void SceneBuilder::write_file(std::string f_name) {
     Exporter exporter;
@@ -144,29 +144,26 @@ void SceneBuilder::build_objects(const rapidjson::Document& _pt) {
 }
 
 void SceneBuilder::build_sphere(const rapidjson::Value& obj) {
-        std::string name;
-        std::string type;
-        float radius;
-        vec3 center;
+        PrimitiveParams params;
 
         if(obj.HasMember("name")) {
-            name = obj["name"].GetString();
+            params.name = obj["name"].GetString();
         }
 
         if(obj.HasMember("type")) {
-            type = obj["type"].GetString();
+            params.type = obj["type"].GetString();
         }
 
         if(obj.HasMember("radius")) {
-           radius = obj["radius"].GetFloat();
+           params.radius = obj["radius"].GetFloat();
         }
 
         if (obj.HasMember("center")) {
             const rapidjson::Value& a = obj["center"];
-            center = vec3(a[0].GetFloat(),a[1].GetFloat(),a[2].GetFloat());
+            params.center = vec3(a[0].GetFloat(),a[1].GetFloat(),a[2].GetFloat());
         }
 
-        Sphere* a = new Sphere(name, type, radius, center);
+        Sphere* a = new Sphere(params);
         primitives.push_back(a);
 }
 
