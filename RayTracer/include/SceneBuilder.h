@@ -24,6 +24,7 @@ class SceneBuilder {
 
         std::string scene_string;
         std::map <std::string, std::string> pallete;
+        std::map <std::string, Material> materials;
 
         std::vector<Primitive*> primitives;
         
@@ -32,11 +33,13 @@ class SceneBuilder {
         ~SceneBuilder();
         void read_file(std::string f_name);
         void write_file(std::string f_name);
-        void build_scene();
+        void setup();
+        void running_setup(const rapidjson::Value& _pt);
         void build_pallete(const rapidjson::Document& _pt);
         void build_background(const rapidjson::Value& _pt);
         void build_camera(const rapidjson::Value& _pt);
         void build_objects(const rapidjson::Document& _pt);
+        void build_materials(const rapidjson::Document& _pt);
         void build_sphere(const rapidjson::Value& obj);
         Color parse_color(const char * hex_string); 
         void run(std::string f_in, std::string f_out);

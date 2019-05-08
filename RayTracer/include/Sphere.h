@@ -9,6 +9,7 @@ class Sphere : public Primitive {
     std::string type;
     float radius;
     vec3 center;
+    Material* material;
 
     public: 
         Sphere();

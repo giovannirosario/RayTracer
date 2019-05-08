@@ -4,6 +4,7 @@
 #include <string>
 #include "Ray.h"
 #include "CameraParams.h"
+#include "Buffer.h"
 
 class Camera {
     protected:

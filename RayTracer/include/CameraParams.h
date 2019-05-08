@@ -19,8 +19,8 @@ class CameraParams {
         int width = 800;
         int height = 600;
 
-        CameraParams();
-        ~CameraParams();
+        CameraParams(){};
+        ~CameraParams(){};
 };
 
 

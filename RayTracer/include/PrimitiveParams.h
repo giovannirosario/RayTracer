@@ -10,6 +10,7 @@ class PrimitiveParams {
         std::string type;
         float radius;
         vec3 center;
+        Material * material;
         
         PrimitiveParams(){};
         ~PrimitiveParams(){};

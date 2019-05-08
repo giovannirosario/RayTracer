@@ -15,6 +15,7 @@ class Primitive {
         virtual bool intersect(Ray& r, SurfaceInteraction * si) = 0;
         virtual bool intersect_p(Ray& r ) = 0;
         virtual const Material * get_material(void) const { return material; }
+        virtual const void set_material(Material* material) {this->material = material;}
 }; 
 
 #endif

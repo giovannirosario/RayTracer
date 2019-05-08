@@ -19,7 +19,7 @@ void FlatIntegrator::render(const Scene* scene, Sampler* sampler) {
     for ( int y = 0 ; y < height ; y++ ) {
         for( int x = 0 ; x < width ; x++ ) {
             Ray ray = camera->generate_ray(float(x)/float(width),float(y)/float(height));
-            Color L = Li( ray, scene, sampler ); // Determine the color for the ray.
+            Color L = Li( ray, scene, sampler, float(x)/float(width),float(y)/float(height)); // Determine the color for the ray.
             camera->film.draw_pixel(x,y,L); // Set color of pixel (x,y) to L.
         }
     }
@@ -27,24 +27,22 @@ void FlatIntegrator::render(const Scene* scene, Sampler* sampler) {
 
 void FlatIntegrator::preprocess( const Scene* scene ){}
 
-Color FlatIntegrator::Li(Ray& ray, const Scene* scene, Sampler* sampler ) const {
+Color FlatIntegrator::Li(Ray& ray, const Scene* scene, Sampler* sampler, float x, float y) const {
     Color L(0,0,0); // The radiance
     // Find closest ray intersection or return background radiance.
-   SurfaceInteraction isect = SurfaceInteraction(); 
+    SurfaceInteraction isect = SurfaceInteraction(); 
 
     if (!scene->intersect(ray, &isect)) {
         //L = scene->background->sample(ray);
-        L = scene->background->get_pixel(ray.get_origin.x(), ray.get_origin.y());
+        L = scene->background->get_pixel(x, y);
     }
     
     else {
-        // Some form of determining the incoming radiance at the ray's origin.
-        // For this integrator, it might just be:
-        // Polymorphism in action.
         const FlatMaterial *fm = dynamic_cast< const FlatMaterial *>( isect.primitive->get_material() );
         // Assign diffuse color to L.
-        L = fm->kd(); // Call a method present only in FlatMaterial.
+        if (fm->type == "flat"){ //Call a method only for FlatMaterial.
+            L = fm->color;
+        }
     }
     return L;
 }
-

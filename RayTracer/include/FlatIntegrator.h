@@ -5,11 +5,11 @@
 
 class FlatIntegrator : public Integrator {
     public:
-        FlatIntegrator(){};
+        FlatIntegrator();
         ~FlatIntegrator();
         void render(const Scene* scene, Sampler* sampler);
-        void preprocess( const Scene* scene ) = 0;
-        Color Li(Ray& ray, const Scene* scene, Sampler* sampler ) const;
+        void preprocess( const Scene* scene );
+        Color Li(Ray& ray, const Scene* scene, Sampler* sampler, float x, float y) const;
 };
 
 #endif

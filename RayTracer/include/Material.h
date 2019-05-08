@@ -9,6 +9,7 @@ class Material {
         std::string name;
         std::string type;
         Color color;
+        std::string color_type;
 
         Material(){};
         virtual ~Material(){};

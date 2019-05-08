@@ -14,10 +14,9 @@ class Integrator {
 
     public:
         Integrator(){};
-        virtual ~Integrator();
-        virtual void render(const Scene* scene ) =0;
+        virtual ~Integrator(){};
+        virtual void render(const Scene* scene, Sampler* sampler) =0;
         virtual void preprocess( const Scene* scene ) = 0;
-        
-        virtual Color Li(const Ray& ray, const Scene* scene, Sampler* sampler ) const = 0;
+        virtual Color Li(Ray& ray, const Scene* scene, Sampler* sampler, float x, float y) const = 0;
 };
 #endif

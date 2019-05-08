@@ -14,7 +14,7 @@ class Scene {
         std::vector<Primitive*> aggregate; // The scene graph of objects, acceleration structure.
 
     public:
-        Scene(std::vector<Primitive*> aggregate){}
+        Scene(std::vector<Primitive*> aggregate);
         /// Determines the intersection info; return true if there is an intersection.
         bool intersect(Ray& r, SurfaceInteraction *isect ) const;
         /*! A faster version that only determines whether there is an intersection or not;*/
