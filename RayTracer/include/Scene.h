@@ -10,10 +10,9 @@ class Scene {
     public:
         //std::vector<Light*> lights; // list of lights
         Background* background; // The background object.
-    private:
         std::vector<Primitive*> aggregate; // The scene graph of objects, acceleration structure.
 
-    public:
+        Scene(){};
         Scene(std::vector<Primitive*> aggregate);
         /// Determines the intersection info; return true if there is an intersection.
         bool intersect(Ray& r, SurfaceInteraction *isect ) const;

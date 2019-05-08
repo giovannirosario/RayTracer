@@ -14,6 +14,8 @@ void Camera::set_params(CameraParams params) {
     this->width = params.width;
     this->height = params.height;
 
+    this->film.set_size(this->width, this->height);
+
     this->position = params.position;
     this->target = params.target;
     this->up = params.up;

@@ -37,8 +37,9 @@ void SceneBuilder::write_file(std::string f_name) {
 void SceneBuilder::setup() {
     rapidjson::Document scene_json;
     scene_json.Parse(scene_string.c_str());
-
     int width, height;
+    
+    scene = new Scene();
 
     if(scene_json.HasMember("pallete")) {
         build_pallete(scene_json);
@@ -108,23 +109,27 @@ void SceneBuilder::running_setup(const rapidjson::Value& _pt) {
 
             //integrator = new NormalMap();
         }
+        integrator->set_camera(this->camera);
     }
 }
 
 void SceneBuilder::build_background(const rapidjson::Value& _pt) {    
+    Background* background = new Background();
     if (_pt.HasMember("type")) {
         std::string type;
         type = _pt["type"].GetString();
-        scene->background->set_type(type);
+        background->set_type(type);
     }
     
     if (_pt.HasMember("colors")) {
         const rapidjson::Value& colors = _pt["colors"];
         for (rapidjson::SizeType i = 0; i < colors.Size(); i++) {
             Color color = parse_color(colors[i].GetString());
-            scene->background->add_color(color);
+            background->add_color(color);
         }
     }
+
+    scene->background = background;
 }
 
 
@@ -196,6 +201,7 @@ void SceneBuilder::build_objects(const rapidjson::Document& _pt) {
             }
         }
     }
+    scene->aggregate = primitives;
 }
 
 
@@ -213,8 +219,10 @@ void SceneBuilder::build_materials(const rapidjson::Document& _pt) {
             if(obj.HasMember("name")) {
                 name = obj["name"].GetString();
             }
+            
             if(obj.HasMember("color")) {
                 color = parse_color(obj["color"].GetString());
+                //std::cout << (int) color.get_r() << "." << (int) color.get_g() << "." << (int) color.get_b() << std::endl;
             }
             if(obj.HasMember("color_type")) {
                 color_type = obj["color_type"].GetString();
@@ -256,7 +264,7 @@ void SceneBuilder::build_sphere(const rapidjson::Value& obj) {
            }
         }
 
-        Sphere* a = new Sphere(params);
+        Primitive* a = new Sphere(params);
         a->set_material(material);
         primitives.push_back(a);
 }

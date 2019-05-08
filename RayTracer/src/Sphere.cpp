@@ -25,8 +25,10 @@ bool Sphere::intersect(Ray& r, SurfaceInteraction * si)  {
         float discriminant = b*b - 4*a*c;
         
         if (discriminant < 0.0) {
+            //std::cout << discriminant << std::endl;
             return false;
         }
+
         else {
             float x1 = (-b + sqrt(discriminant)) / (2 * a);
             float x2 = (-b - sqrt(discriminant)) / (2 * a);

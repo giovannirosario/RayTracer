@@ -3,6 +3,7 @@
 #include "Buffer.h"
 #include "FlatMaterial.h"
 #include "SurfaceInteraction.h"
+#include <iostream>
 
 FlatIntegrator::FlatIntegrator(){};
 FlatIntegrator::~FlatIntegrator(){};
@@ -19,7 +20,7 @@ void FlatIntegrator::render(const Scene* scene, Sampler* sampler) {
     for ( int y = 0 ; y < height ; y++ ) {
         for( int x = 0 ; x < width ; x++ ) {
             Ray ray = camera->generate_ray(float(x)/float(width),float(y)/float(height));
-            Color L = Li( ray, scene, sampler, float(x)/float(width),float(y)/float(height)); // Determine the color for the ray.
+            Color L = Li(ray, scene, sampler, float(x)/float(width),float(y)/float(height)); // Determine the color for the ray.
             camera->film.draw_pixel(x,y,L); // Set color of pixel (x,y) to L.
         }
     }
@@ -28,7 +29,7 @@ void FlatIntegrator::render(const Scene* scene, Sampler* sampler) {
 void FlatIntegrator::preprocess( const Scene* scene ){}
 
 Color FlatIntegrator::Li(Ray& ray, const Scene* scene, Sampler* sampler, float x, float y) const {
-    Color L(0,0,0); // The radiance
+    Color L = Color(0,0,0); // The radiance
     // Find closest ray intersection or return background radiance.
     SurfaceInteraction isect = SurfaceInteraction(); 
 
@@ -36,7 +37,6 @@ Color FlatIntegrator::Li(Ray& ray, const Scene* scene, Sampler* sampler, float x
         //L = scene->background->sample(ray);
         L = scene->background->get_pixel(x, y);
     }
-    
     else {
         const FlatMaterial *fm = dynamic_cast< const FlatMaterial *>( isect.primitive->get_material() );
         // Assign diffuse color to L.
@@ -44,5 +44,6 @@ Color FlatIntegrator::Li(Ray& ray, const Scene* scene, Sampler* sampler, float x
             L = fm->color;
         }
     }
+    
     return L;
 }
