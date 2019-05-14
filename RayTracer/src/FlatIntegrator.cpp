@@ -19,7 +19,7 @@ void FlatIntegrator::render(const Scene* scene, Sampler* sampler) {
 
     for ( int y = 0 ; y < height ; y++ ) {
         for( int x = 0 ; x < width ; x++ ) {
-            Ray ray = camera->generate_ray(float(x)/float(width),float(y)/float(height));
+            Ray ray = camera->generate_ray(x,y);
             Color L = Li(ray, scene, sampler, float(x)/float(width),float(y)/float(height)); // Determine the color for the ray.
             camera->film.draw_pixel(x,y,L); // Set color of pixel (x,y) to L.
         }
@@ -38,10 +38,12 @@ Color FlatIntegrator::Li(Ray& ray, const Scene* scene, Sampler* sampler, float x
         L = scene->background->get_pixel(x, y);
     }
     else {
-        const FlatMaterial *fm = dynamic_cast< const FlatMaterial *>( isect.primitive->get_material() );
-        // Assign diffuse color to L.
-        if (fm->type == "flat"){ //Call a method only for FlatMaterial.
-            L = fm->color;
+        const Material *fm = isect.primitive->get_material();
+        if (fm != NULL) {
+            //Assign diffuse color to L.
+            if (fm->type == "flat"){ //Call a method only for FlatMaterial.
+                L = fm->color;
+            }
         }
     }
     

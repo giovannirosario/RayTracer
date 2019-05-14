@@ -8,14 +8,14 @@
         "colors":["99CCFF","120A8F","120A8F", "99CCFF"]
     },
     "camera": {
-        "type":"orthographic",
-        "position":[0,0,0],
+        "type":"perspective",
+        "position":[0,0,2],
         "target":[0,0,-10],
         "up":[0,1,1],
         
         "vpdim":[-3,3,-2.25,2.25],
 
-        "fovy":65.0,
+        "fovy":45.0,
         "aspect":1.33,
         "fdistance":1,
 
@@ -27,19 +27,55 @@
             "name":"sphere1",
             "type":"sphere",
             "radius":0.4,
+            "material":"green",
             "center":[-1,0.5,-5]
         },
         {
             "name":"sphere2",
             "type":"sphere",
             "radius":0.4,
+            "material":"green",
             "center":[1,-0.5,-8]
         },
         {
             "name":"sphere3",
             "type":"sphere",
-            "radius":0.4,
+            "radius":0.3,
+            "material":"gold",
             "center":[-1,-1.5,-3.5]
+        },
+        {
+            "name":"sphere4",
+            "type":"sphere",
+            "radius":0.4,
+            "material":"pink",
+            "center":[7.0,1.5,-10]
         }
-    ]
+    ],
+    "materials":[
+        {
+            "name":"gold",
+            "type":"flat",
+            "color":"EC7C11",
+            "color_type":"diffuse"
+        },
+        {
+            "name":"green",
+            "type":"flat",
+            "color":"2AC933",
+            "color_type":"diffuse"
+        },
+        {
+            "name":"pink",
+            "type":"flat",
+            "color":"FD99FD",
+            "color_type":"diffuse"
+        }
+    ],
+    "running":{
+        "integrator":{
+            "type":"flat",
+            "spp":1
+        }
+    }
 }

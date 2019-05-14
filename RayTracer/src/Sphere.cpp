@@ -35,7 +35,9 @@ bool Sphere::intersect(Ray& r, SurfaceInteraction * si)  {
 
             si->time = fmin(x1,x2);
             si->contact_point = origin + (si->time * direction);
-            si->primitive->set_material(this->material);
+
+            //getting adress of current object. Maybe it should create a new one ? 
+            si->primitive = this;
             auto n = unit_vector(si->contact_point - center);
             si->normal = 0.5 * vec3(n.x()+1, n.y()+1, n.z()+1); //normal
 
