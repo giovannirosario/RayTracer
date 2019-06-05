@@ -15,6 +15,8 @@
 #include <sstream>
 #include "Sphere.h"
 #include "CameraParams.h"
+#include "FlatIntegrator.h"
+#include "FlatMaterial.h"
 
 SceneBuilder::SceneBuilder() {}
 
@@ -25,18 +27,19 @@ void SceneBuilder::read_file(std::string f_name) {
     std::stringstream buffer;
     buffer << t.rdbuf();
     scene_string = buffer.str();
-}
+}   
 
 void SceneBuilder::write_file(std::string f_name) {
     Exporter exporter;
     exporter.export_ppm(camera->film, f_name);
 }
 
-void SceneBuilder::build_scene() {
+void SceneBuilder::setup() {
     rapidjson::Document scene_json;
     scene_json.Parse(scene_string.c_str());
-
     int width, height;
+    
+    scene = new Scene();
 
     if(scene_json.HasMember("pallete")) {
         build_pallete(scene_json);
@@ -50,26 +53,83 @@ void SceneBuilder::build_scene() {
         build_camera(scene_json["camera"]);
     }
 
+    if (scene_json.HasMember("materials")) {
+        build_materials(scene_json);
+    }
+
     if (scene_json.HasMember("objects")) {
         build_objects(scene_json);
+    }
+
+    if (scene_json.HasMember("running")) {
+        running_setup(scene_json["running"]);
     }
 }
 
 
+void SceneBuilder::running_setup(const rapidjson::Value& _pt) {
+    if (_pt.HasMember("integrator")) {
+        std::string type;
+        int ssp; //samples per pixel
+        Color near;
+        Color far;
+
+        const rapidjson::Value& _itg = _pt["integrator"];
+        if (_itg.HasMember("type")) {
+            type = _itg["type"].GetString();
+        }
+        if (_itg.HasMember("spp")) {
+            ssp = _itg["spp"].GetInt();
+        }
+
+        if (type == "flat") {
+            integrator = new FlatIntegrator();
+        }
+
+        if (type == "depth_map") {
+           if (_itg.HasMember("near_color")) {
+                near = parse_color(_itg["near_color"].GetString());
+            }
+
+            if (_itg.HasMember("far_color")) {
+                far = parse_color(_itg["far_color"].GetString());
+            }
+
+            //integrator = new DepthIntegrator();
+        }
+
+        if (type == "normal_map") {
+           if (_itg.HasMember("near_color")) {
+                near = parse_color(_itg["near_color"].GetString());
+            }
+
+            if (_itg.HasMember("far_color")) {
+                far = parse_color(_itg["far_color"].GetString());
+            }
+
+            //integrator = new NormalMap();
+        }
+        integrator->set_camera(this->camera);
+    }
+}
+
 void SceneBuilder::build_background(const rapidjson::Value& _pt) {    
+    Background* background = new Background();
     if (_pt.HasMember("type")) {
         std::string type;
         type = _pt["type"].GetString();
-        scene->background->set_type(type);
+        background->set_type(type);
     }
     
     if (_pt.HasMember("colors")) {
         const rapidjson::Value& colors = _pt["colors"];
         for (rapidjson::SizeType i = 0; i < colors.Size(); i++) {
             Color color = parse_color(colors[i].GetString());
-            scene->background->add_color(color);
+            background->add_color(color);
         }
     }
+
+    scene->background = background;
 }
 
 
@@ -78,6 +138,7 @@ void SceneBuilder::build_camera(const rapidjson::Value& _pt) {
 
     if (_pt.HasMember("type")) {
         std::string type = _pt["type"].GetString();
+        cameraParams.type = type;
         if(type == "orthographic") {
             camera = new OrthoCamera();
         } else if (type == "perspective") {
@@ -141,32 +202,71 @@ void SceneBuilder::build_objects(const rapidjson::Document& _pt) {
             }
         }
     }
+    scene->aggregate = primitives;
 }
 
-void SceneBuilder::build_sphere(const rapidjson::Value& obj) {
-        std::string name;
-        std::string type;
-        float radius;
-        vec3 center;
 
-        if(obj.HasMember("name")) {
-            name = obj["name"].GetString();
-        }
+void SceneBuilder::build_materials(const rapidjson::Document& _pt) {
+    for (auto& obj : _pt["materials"].GetArray()) {
+        std::string type;
+        std::string name;
+        Color color;
+        std::string color_type;
+        Material material;
 
         if(obj.HasMember("type")) {
             type = obj["type"].GetString();
+      
+            if(obj.HasMember("name")) {
+                name = obj["name"].GetString();
+            }
+            
+            if(obj.HasMember("color")) {
+                color = parse_color(obj["color"].GetString());
+                //std::cout << (int) color.get_r() << "." << (int) color.get_g() << "." << (int) color.get_b() << std::endl;
+            }
+            if(obj.HasMember("color_type")) {
+                color_type = obj["color_type"].GetString();
+            }
+
+            if (type == "flat") {
+                Material m = FlatMaterial(name, type, color, color_type);
+                materials.insert(std::pair<std::string, Material> (name, m));
+            }
+        }
+    }
+}
+
+void SceneBuilder::build_sphere(const rapidjson::Value& obj) {
+        PrimitiveParams params;
+        Material * material;
+
+        if(obj.HasMember("name")) {
+            params.name = obj["name"].GetString();
+        }
+
+        if(obj.HasMember("type")) {
+            params.type = obj["type"].GetString();
         }
 
         if(obj.HasMember("radius")) {
-           radius = obj["radius"].GetFloat();
+           params.radius = obj["radius"].GetFloat();
         }
 
         if (obj.HasMember("center")) {
             const rapidjson::Value& a = obj["center"];
-            center = vec3(a[0].GetFloat(),a[1].GetFloat(),a[2].GetFloat());
+            params.center = vec3(a[0].GetFloat(),a[1].GetFloat(),a[2].GetFloat());
         }
 
-        Sphere* a = new Sphere(name, type, radius, center);
+        if (obj.HasMember("material")) {
+            std::string m_name = obj["material"].GetString();
+           if (materials.count(m_name) > 0) {
+               material = &materials.at(m_name);
+           }
+        }
+
+        Primitive* a = new Sphere(params);
+        a->set_material(material);
         primitives.push_back(a);
 }
 
@@ -178,28 +278,8 @@ void SceneBuilder::build_pallete(const rapidjson::Document& _pt) {
 }
 
 void SceneBuilder::trace() {
-
-    integrator->render(scene);
-    
-    /*color_buffer.set_size(camera->get_width(), camera->get_height());
-	int h = color_buffer.get_height();
-	int w = color_buffer.get_width();
-
-	for ( int j = h-1 ; j >= 0 ; j-- ) {
-		for( int i = 0 ; i < w ; i++ ) {
-            Ray ray = camera->generate_ray(i,j);
-            Color color = background.get_pixel( float(i)/float(w), float(j)/float(h));
-            
-            std::cout << ray.get_vDirection() << std::endl;
-            for(Primitive* p : primitives) {
-                if(p->intersect_p(ray)){
-                    color = Color(255,0,0);
-                }
-            }
-
-            color_buffer.draw_pixel(i,j,color);
-        }
-	}*/
+    Sampler* sampler;
+    integrator->render(scene, sampler);
 }
 
 Color SceneBuilder::parse_color(const char * hex_string) {
@@ -219,7 +299,7 @@ Color SceneBuilder::parse_color(const char * hex_string) {
 
 void SceneBuilder::run(std::string f_in, std::string f_out) {
     read_file(f_in);
-    build_scene();
+    setup();
     trace();
     write_file(f_out);
 }

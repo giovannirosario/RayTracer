@@ -1,14 +1,14 @@
-#include "FlatIntegrator.h"
+#include "DepthMapIntegrator.h"
 #include "Camera.h"
 #include "Buffer.h"
 #include "FlatMaterial.h"
 #include "SurfaceInteraction.h"
 #include <iostream>
 
-FlatIntegrator::FlatIntegrator(){};
-FlatIntegrator::~FlatIntegrator(){};
+DepthMapIntegrator::DepthMapIntegrator(){};
+DepthMapIntegrator::~DepthMapIntegrator(){};
 
-void FlatIntegrator::render(const Scene* scene, Sampler* sampler) {
+void DepthMapIntegrator::render(const Scene* scene, Sampler* sampler) {
     // Always call the preprocess() before doing any rendering.
     // This might be just an empty method, or not, depending on the integrator's needs.
     preprocess(scene);
@@ -28,26 +28,27 @@ void FlatIntegrator::render(const Scene* scene, Sampler* sampler) {
     }
 }
 
-void FlatIntegrator::preprocess( const Scene* scene ){}
+void DepthMapIntegrator::preprocess( const Scene* scene ){}
 
-Color FlatIntegrator::Li(Ray& ray, const Scene* scene, Sampler* sampler, float x, float y) const {
-    Color L = Color(0,0,0); // The radiance
+Color DepthMapIntegrator::Li(Ray& ray, const Scene* scene, Sampler* sampler, float x, float y) const {
+    /* Color L = Color(0,0,0); // The radiance
     // Find closest ray intersection or return background radiance.
-    SurfaceInteraction isect = SurfaceInteraction(); 
+    SurfaceInteraction isect = SurfaceInteraction();
 
     if (!scene->intersect(ray, &isect)) {
         //L = scene->background->sample(ray);
         L = scene->background->get_pixel(x, y);
     }
     else {
-        const Material *fm = isect.primitive->get_material();
-        if (fm != NULL) {
-            //Assign diffuse color to L.
-            if (fm->type == "flat"){ //Call a method only for FlatMaterial.
-                L = fm->color;
-            }
-        }
+         //interpolation
+        float delta = (isect.t - zMin) / (zMax - zMin);
+        int r = near_color.r() + (far_color.r() - near_color.r()) * delta;
+        int g = near_color.g() + (far_color.g() - near_color.g()) * delta;
+        int b = near_color.b() + (far_color.b() - near_color.b()) * delta;
+
+        L = Color(r, g, b);
     }
-    
+
     return L;
+    */
 }

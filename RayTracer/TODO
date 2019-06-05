@@ -1,0 +1,25 @@
+Primitive
+    Shape
+    Material
+
+GeometricPrimitive
+
+
+AggregatePrimitive
+    PrimList
+    BVHAccel
+
+
+Scene tem apenas um ponteiro para AggregatePrimitive, que abstrai o restante dos shapes e materials.
+
+https://graphicscodex.com
+
+
+trianglemesh
+    ntriangles value = 2
+    vertices value = ver1 ver2 ver3 ver4
+    normals value = vec1 vec2 vec3 vec4
+
+
+Mudar aspect. Dar preferencia pro aspect, se não, calcular aspect pela altura e largura.
+

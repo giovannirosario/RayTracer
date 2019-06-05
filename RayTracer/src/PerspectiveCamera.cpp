@@ -1,4 +1,5 @@
 #include "PerspectiveCamera.h"
+#include <math.h>
 
 PerspectiveCamera::PerspectiveCamera() {}
 
@@ -14,6 +15,7 @@ Ray PerspectiveCamera::generate_ray(float x, float y) {
     vec_u.make_unit_vector();
     vec3 vec_v = cross(w, vec_u);
     vec_v.make_unit_vector();
+
 
     vec3 ray_direction = -fdistance * w +  vec_u*u + vec_v * v; //camera look
 

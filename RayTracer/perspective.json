@@ -9,18 +9,18 @@
     },
     "camera": {
         "type":"perspective",
-        "position":[0,0,2],
+        "position":[0,0,0],
         "target":[0,0,-10],
         "up":[0,1,1],
-
+        
         "vpdim":[-3,3,-2.25,2.25],
 
-        "fovy":65.0,
-        "aspect":1,
+        "fovy":45.0,
+        "aspect":1.33,
         "fdistance":1,
 
-        "width":800,
-        "height":600
+        "width":40,
+        "height":30
     },
     "objects":[
         {
@@ -40,14 +40,14 @@
         {
             "name":"sphere3",
             "type":"sphere",
-            "radius":0.4,
+            "radius":0.3,
             "material":"gold",
             "center":[-1,-1.5,-3.5]
         },
         {
             "name":"sphere4",
             "type":"sphere",
-            "radius":1,
+            "radius":0.4,
             "material":"pink",
             "center":[7.0,1.5,-10]
         }

@@ -1,12 +1,13 @@
-#ifndef _FLATINTEGRATOR_H_
-#define _FLATINTEGRATOR_H_
+
+#ifndef _DEPTHMAPINTEGRATOR_H_
+#define _DEPTHMAPINTEGRATOR_H_
 
 #include "Integrator.h"
 
-class FlatIntegrator : public Integrator {
+class DepthMapIntegrator : public Integrator {
     public:
-        FlatIntegrator();
-        ~FlatIntegrator();
+        DepthMapIntegrator();
+        ~DepthMapIntegrator();
         void render(const Scene* scene, Sampler* sampler);
         void preprocess( const Scene* scene );
         Color Li(Ray& ray, const Scene* scene, Sampler* sampler, float x, float y) const;
