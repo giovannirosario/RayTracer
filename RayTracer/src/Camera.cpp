@@ -24,8 +24,17 @@ void Camera::set_params(CameraParams params) {
     this->fdistance = params.fdistance;
     this->aspect = params.aspect;
 
-    this->l = params.vpdim[0];
-    this->r = params.vpdim[1];
-    this->b = params.vpdim[2];
-    this->t = params.vpdim[3];
+     if(params.type == "orthographic") {
+        this->l = params.vpdim[0];
+        this->r = params.vpdim[1];
+        this->b = params.vpdim[2];
+        this->t = params.vpdim[3];
+    } else if (params.type == "perspective") {
+        float half_height = tan(fovy /2) * fdistance;
+        float half_width = aspect * half_height;
+        this->l = -half_width;
+        this->r = half_width;
+        this->b = -half_height;
+        this->t = half_height;
+    }
 }

@@ -5,11 +5,6 @@
 #include "Ray.h"
 
 class PerspectiveCamera : public Camera {
-    private:
-        float fovy;
-        float aspect;
-        float fdistance;
-
     public:
         PerspectiveCamera();
         ~PerspectiveCamera();

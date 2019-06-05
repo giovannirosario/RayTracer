@@ -4,8 +4,6 @@
 #include "Camera.h"
 
 class OrthoCamera : public Camera {
-    private:
-
     public:
         OrthoCamera();
         ~OrthoCamera();

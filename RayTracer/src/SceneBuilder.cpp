@@ -138,6 +138,7 @@ void SceneBuilder::build_camera(const rapidjson::Value& _pt) {
 
     if (_pt.HasMember("type")) {
         std::string type = _pt["type"].GetString();
+        cameraParams.type = type;
         if(type == "orthographic") {
             camera = new OrthoCamera();
         } else if (type == "perspective") {
